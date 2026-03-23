@@ -1,0 +1,225 @@
+✅ Experiment 1: Git Local & Remote Repository (Basic Commands)
+Aim
+
+To create local and remote repositories using Git and GitHub and apply basic Git commands.
+
+Steps
+Install Git
+Download and install Git from official website.
+
+Create a Folder
+
+cd Desktop
+mkdir DevOps
+cd DevOps
+Create Repository on GitHub
+Go to GitHub
+Create new repository → Name: Prog
+Copy HTTPS URL
+
+Clone Repository
+
+git clone <repository-URL>
+cd Prog
+
+Initialize Repository
+
+git init
+
+Create File
+
+nano first.txt
+Write: Hello World
+
+Configure Git
+
+git config --global user.email "your_email@example.com"
+git config --global user.name "Your Name"
+git config --list
+
+Add File
+
+git add first.txt
+
+Check Status
+
+git status
+Commit Changes
+git commit -m "First commit"
+Push to GitHub
+git push -u origin main
+View Logs
+git log
+Reset (Undo changes)
+git reset --hard
+
+
+✅ Experiment 2: Branching, Merge, Fork, Pull Request
+Aim
+
+To demonstrate branching, merging, fork, diff, merge conflict, and pull request.
+
+Steps
+Fork Repository
+Search any repo (example: sum of 2 numbers)
+Click Fork on GitHub
+
+Clone Repository
+
+git clone <forked-repo-URL>
+cd sum
+
+Initialize
+
+git init
+
+Configure Git
+
+git config --global user.email "your_email"
+git config --global user.name "your_name"
+
+Create Branch
+
+git branch f1
+git checkout f1
+
+Create File
+
+nano file1.txt
+
+Content: Hello World
+
+Add & Commit
+
+git add file1.txt
+git commit -m "file1 added"
+
+Create Another File
+
+nano file2.txt
+
+Content: Hello AI
+
+git add file2.txt
+git commit -m "file2 added"
+
+Merge Branch
+
+git checkout main
+git merge f1
+Create Merge Conflict
+Edit same file in both branches (first.txt)
+Then merge → conflict occurs
+Check Difference
+git diff first.txt
+Push Changes
+git push -u origin main
+Pull Request
+Go to GitHub
+Click Compare & Pull Request
+Submit PR
+
+
+✅ Experiment 3: GitHub + Jenkins CI/CD Integration
+Aim
+
+To integrate GitHub with Jenkins for CI/CD pipeline.
+
+Steps
+Install Java JDK
+Install Java Development Kit
+Set Environment Variable
+Add JDK path to System PATH
+Install Jenkins
+Download Jenkins (LTS version)
+Install with default settings
+
+Open Jenkins
+
+http://localhost:8080
+Unlock Jenkins
+Copy password from system file
+Paste in browser
+Install Plugins
+Select “Install Suggested Plugins”
+Create Admin User
+Enter username, password, email
+Create GitHub Repo
+New repo → program3
+
+Push Code Using Git
+
+git clone <repo-url>
+cd program3
+git init
+git add first.java
+git commit -m "Java file added"
+git push -u origin main
+Create Jenkins Job
+New Item → Freestyle Project
+Source Code Management → Git → Paste repo URL
+Branch → main
+Build Step
+Add → Execute Windows batch command
+javac First.java
+java First
+Build Project
+Click Build Now
+
+
+✅ Experiment 4: Maven Project in CI/CD
+Aim
+
+To create a Maven project with dependencies for CI/CD.
+
+Steps
+Open Eclipse
+Use Eclipse IDE
+Create Maven Project
+File → New → Maven Project
+Select maven-archetype-quickstart
+Set Details
+Group ID: exp11
+Artifact ID: exp11
+
+Add Dependency
+
+Open pom.xml
+Add:
+<dependency>
+    <groupId>com.googlecode.json-simple</groupId>
+    <artifactId>json-simple</artifactId>
+    <version>1.1.1</version>
+</dependency>
+
+Create Java Class
+Path: src/main/java
+Class: Exp11.java
+Write Code (JSON Parsing)
+import java.io.FileReader;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+public class Exp11 {
+    public static void main(String[] args) throws Exception {
+        JSONParser parser = new JSONParser();
+        Object obj = parser.parse(new FileReader("emp.json"));
+
+        JSONObject jsonObject = (JSONObject) obj;
+
+        String fname = (String) jsonObject.get("firstname");
+        String lname = (String) jsonObject.get("lastname");
+
+        System.out.println("First Name: " + fname);
+        System.out.println("Last Name: " + lname);
+    }
+}
+
+Create JSON File
+File: emp.json
+{
+  "firstname": "Ayush",
+  "lastname": "Thanthri"
+}
+Run Project
+Right-click → Run as Java Application
