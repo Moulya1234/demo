@@ -1,0 +1,306 @@
+###docker program
+
+### Aim
+
+Create a docker image for an application stored in local repository and run the application using docker image.
+Humanity really looked at virtual machines and said, “What if we trapped applications in tiny shipping containers?” Anyway, here we are.
+
+---
+
+### S1
+
+Create a folder **`dockerimage`** inside another folder **`Devops`**.
+
+---
+
+### S2
+
+Open the `dockerimage` folder in VS Code and create 2 new files:
+
+* `sample.py`
+* `Dockerfile`
+
+**sample.py**
+
+```python
+print("Hello World")
+```
+
+---
+
+### S3
+
+Content of `Dockerfile`:
+
+```dockerfile
+FROM python
+
+WORKDIR /app
+
+COPY . /app
+
+CMD ["python", "sample.py"]
+```
+
+---
+
+### S4
+
+Open the terminal in VS Code (inside dockerimage directory) and use these commands:
+
+```bash
+py sample.py
+```
+
+```bash
+docker build -t test.1 .
+```
+
+> `test.1` is the image name
+
+```bash
+docker run --name cont1 test.1
+```
+
+> `cont1` is the container name
+
+---
+
+### Output
+
+```text
+Hello World
+```
+
+Output for running:
+
+```bash
+docker run --name cont1 test.1
+```
+
+---
+
+### S5
+
+Open Docker Desktop application to check if a new image repository `test.1` is added or not.
+
+---
+
+### S6
+
+Copy the image tag by clicking on `test.1` and copying the image tag.
+
+Example:
+
+```text
+test.1:latest
+c3d0fc458fa
+```
+
+---
+
+### S7
+
+Push the container to a remote repository that is Docker Hub using these commands in terminal:
+
+```bash
+docker image tag <copied_image_tag> <username>/test.1
+```
+
+```bash
+docker push <username>/test.1:latest
+```
+
+---
+
+### S8
+
+Check if the container is pushed to Docker Hub by opening Docker Desktop and heading to Docker Hub and searching for:
+
+```text
+<username>/test.1
+```
+
+---
+
+---
+###Docker program with jenkins
+# Experiment 6
+
+### S1
+
+Go to GitHub and create a new repository with the name `Dockerprog`.
+
+Copy the repository URL and clone it by opening Git Bash and typing:
+
+```bash
+git clone <your_repo_url>
+```
+
+Because apparently typing the same commands for 20 years is considered “modern software engineering.”
+
+---
+
+### S2
+
+Open VS Code and create 2 new files inside `Dockerprog` folder:
+
+* `Dockerfile`
+* `sample.py`
+
+**Dockerfile**
+
+```dockerfile
+FROM python
+
+WORKDIR /app
+
+COPY . /app
+
+CMD ["python", "sample.py"]
+```
+
+---
+
+### S3
+
+Commit and push the changes to the repository:
+
+```bash
+git add .
+git commit -m "Initial commit"
+git push
+```
+
+---
+
+### S4
+
+Create a new Docker image and container by running the following commands in Git Bash:
+
+```bash
+docker build -t test.2 .
+```
+
+```bash
+docker run --name cont2 test.2
+```
+
+```bash
+docker images
+```
+
+Lists all images present in your local device.
+
+Example:
+
+```text
+IMAGE           ID             DISK USAGE   CONTENT SIZE
+test.2:latest   cb3ded3a739a   1.61GB       444MB
+```
+
+Tag the image:
+
+```bash
+docker tag cb3ded3a739a ayush05/test.2
+```
+
+Push image to Docker Hub:
+
+```bash
+docker push ayush05/test.2:latest
+```
+
+---
+
+### S5
+
+Head to Jenkins and click on:
+
+```text
+Settings → Plugins
+```
+
+---
+
+### S6
+
+Update all installed plugins.
+
+Make sure these plugins are installed:
+
+* CloudBees Docker Custom Build Environment
+* Docker
+* Docker Pipelines
+* Docker Compose Build Steps
+
+Because DevOps without plugins is just suffering manually with extra steps.
+
+---
+
+### S7
+
+Create a new item with name `Doc2` and select **Pipeline** item type.
+
+---
+
+### S8
+
+Add this pipeline script:
+
+```groovy
+pipeline
+{
+    agent any
+
+    environment
+    {
+        dockerImage = "ayush05/test.2"
+        registry = "ayush05/test.2"
+        registryCredential = "jenkin_docker_token"
+    }
+
+    stages
+    {
+        stage('Checkout')
+        {
+            steps
+            {
+                checkout scmGit(
+                    branches: [[name: '*/main']],
+                    extensions: [],
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/AyushThanthri/dockerprog.git'
+                    ]]
+                )
+            }
+        }
+
+        stage('Build Docker Image')
+        {
+            steps
+            {
+                script
+                {
+                    dockerImage = docker.build(registry)
+                }
+            }
+        }
+    }
+}
+```
+
+---
+
+### S9
+
+Click on **Save** and find the **Build Now** button on the left sidebar.
+
+Upon success:
+
+```text
+#1 SUCCESS
+15:07
+```
+
+Tiny green ticks. The universal symbol for “the pipeline failed 17 times before this screenshot.”
