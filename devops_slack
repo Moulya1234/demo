@@ -1,0 +1,37 @@
+1. Install Slack :
+a. Search for slack download for windows https://slack.com/intl/en-in/downloads/windows
+b. Log in to slack and join the group "VVCE"
+  
+Create a new public channel with the name "devops-group-channel" or any other name
+
+2. Jenkins Configuration
+a. Head to jenkins and click on manage jenkins button
+b. Click on plugins, update all the existing plugins.
+c. Now install a plugin called "slack notification"
+image.png
+
+3. Configuring jenkins system
+a. Now open the manage jenkins section and open the System section
+b. Search for slack subsection
+image.png
+c. Now the workspace name should be the name of the group joined on slack. To access this, open slack and find the name of the group and copy the url of the group
+image.png
+It should be <yourgroupname>.slack.in, Copy only <yourgroupname> and paste it in jenkins
+d. now head to my.slack.com/services/new/jenkins-ci and then select your channel name (devops-group-channel) and then click on Add Jenkins CI Integration
+image.png
+e. Now scroll down to step 3 and copy the credential id
+image.png
+f. Now in the system section of the manage jenkins section, We add a new credential, click on the + Add option -> Global -> secret text and paste the copied credential id in the Secret section, Give any name to the ID and Give any description
+g. Now save it and select the description name while selecting the credential outside
+h. finally add the name of the group preceeding by a # (#devops-group-channel)
+
+3. Jenkins Item building
+a. Now create a new "freestyle" project and configure build steps as "Execute windows batch command"
+b. Add the command as java --version (or any simple command)
+c. Configure a post-build action step by chosing slack notifications
+d. Choose 1. Notify build start, 2. Notify Build Success 3. Notify Every Failure
+e. Save and run build
+
+4. Slack notification
+a. Open slack and open the channel which was created, There a success notification with the jenkins item name will be visible
+image.png
